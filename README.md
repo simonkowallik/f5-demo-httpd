@@ -1,105 +1,187 @@
-F5 Demo - NGINX Backend
-=======================
+# F5 Demo HTTPD
 
-### About
+A lightweight, customizable demo web application built on NGINX. Designed for testing load balancers, reverse proxies, and demonstrating traffic distribution across multiple backend instances.
 
-Simple Docker NGINX backend container.  This was formerly based on Apache HTTPD, but updated to use NGINX. 
+## Features
 
-This can be used for simple demos.
+- **Visual Instance Identification** - Each container displays a unique color, making it easy to identify which backend is serving requests
+- **Multi-Protocol Support** - HTTP, HTTPS, and HTTP/2 with auto-generated self-signed certificates
+- **Multiple Response Formats** - HTML, JSON, and plain text endpoints
+- **Request Introspection** - View all request headers, client/server IPs, and connection details
+- **Lightweight** - Based on NGINX alpine for minimal footprint
+- **Latency Monitoring** - Built-in ping functionality to measure response times
 
-The Apache HTTPD configuration is left as reference.
+## Quick Start
 
-This is [F5 Contributed Software](https://support.f5.com/csp/article/K80012344)
+### Using Docker Compose
 
-[Docker Hub](https://hub.docker.com/r/f5devcentral/f5-demo-httpd/)
-
-### Requirements
-   Docker 
-
-### Usage
-
-```
-# simple page
-docker run -p 8080:80 f5devcentral/f5-demo-httpd:nginx
-# simple website
-docker run --rm -e F5DEMO_APP=website f5devcentral/f5-demo-httpd:nginx
-# simple frontend
-docker run --rm -e F5DEMO_APP=frontend -e F5DEMO_BACKEND_URL=http://10.1.20.10/backend.shtml f5devcentral/f5-demo-httpd:nginx
-# simple backend
-docker run --rm -e F5DEMO_APP=backend f5devcentral/f5-demo-httpd:nginx
-# different name/color for non-ssl/ssl
-docker run --rm -p 8080:80 -p 8443:443 \
-                -e F5DEMO_APP=website \
-                -e F5DEMO_NODENAME='No SSL' \
-                -e F5DEMO_COLOR=ffd734 \
-                -e F5DEMO_NODENAME_SSL='SSL Site' \
-                -e F5DEMO_COLOR_SSL=a0bf37 \
-                f5devcentral/f5-demo-httpd:nginx
-
-# compatible with openshift (does not run as root)
-docker run --rm -p 8080:8080 -p 8443:8443 -e F5DEMO_APP=website f5devcentral/f5-demo-httpd:openshift
+```bash
+docker compose up -d
 ```
 
-Other variables for "website"
+The application will be available at:
+- HTTP: http://localhost:80
+- HTTPS: https://localhost:443
 
-```
-# change the title
--e F5DEMO_NODENAME='Your Website'
-# change the color
+### Using Docker Run
 
-# dark gray
--e F5DEMO_COLOR=656263
-# yellow
--e F5DEMO_COLOR=ffd734
-# blue
--e F5DEMO_COLOR=0194d2
-# green
--e F5DEMO_COLOR=a0bf37
-# orange
--e F5DEMO_COLOR=ed7b0c
-# dark blue
--e F5DEMO_COLOR=004892
+```bash
+docker run -d -p 80:80 -p 443:443 ghcr.io/OWNER/f5-demo-httpd:latest
 ```
 
-### URIs
+## Configuration
 
-```
-/index.shtml: simple site
-/frontend.shtml: simple frontend (for reverse-proxy demo)
-/backend.shtml: simple backend
-/website.shtml: Simple website
-/headers/: Output of Client/Server HTTP headers
-/headers.json: Output of client headers in JSON
-/txt: NJS output of NGINX variables
+### Environment Variables
 
-================================================
- ___ ___   ___                    _
-| __| __| |   \ ___ _ __  ___    /_\  _ __ _ __
-| _||__ \ | |) / -_) '  \/ _ \  / _ \| '_ \ '_ \
-|_| |___/ |___/\___|_|_|_\___/ /_/ \_\ .__/ .__/
-                                      |_|  |_|
-================================================
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `F5DEMO_NODENAME` | Display name for the instance | Container hostname |
+| `F5DEMO_COLOR` | Background color for HTTP (hex without #) | Random from palette |
+| `F5DEMO_COLOR_SSL` | Background color for HTTPS (hex without #) | Random from palette |
 
-      Node Name: F5 Docker vLab
-     Short Name: 41fd19e86e9a
+### Docker Compose Environment
 
-      Server IP: 172.17.0.2
-    Server Port: 80
+Copy the example environment file and customize:
 
-      Client IP: 172.17.0.1
-    Client Port: 45664
-
-Client Protocol: HTTP
- Request Method: GET
-    Request URI: /txt
-
-    host_header: localhost
-     user-agent: curl/7.29.0
-x-forwarded-for: 192.168.1.187
-
-
+```bash
+cp dot-env-example .env
 ```
 
-### Authored By
+Example `.env` file:
+```
+ADDRESS=0.0.0.0
+HTTP_PORT=80
+HTTPS_PORT=443
+F5DEMO_NODENAME=my-server
+F5DEMO_COLOR=f59744
+F5DEMO_COLOR_SSL=dccbc7
+```
 
-[Eric Chen](https://devcentral.f5.com/s/profile/0051T000008tz2AQAQ) | [@chen23](https://github.com/chen23)
+### Custom Configuration via Docker Compose
+
+```yaml
+services:
+  f5-demo-nginx:
+    image: ghcr.io/OWNER/f5-demo-httpd:latest
+    ports:
+      - "8080:80"
+      - "8443:443"
+    environment:
+      - F5DEMO_NODENAME=pool-member-one
+      - F5DEMO_COLOR=a0bf37
+      - F5DEMO_COLOR_SSL=37a0bf
+```
+
+## API Endpoints
+
+### `GET /` or `GET /index.html`
+Interactive HTML dashboard displaying server information with live ping monitoring.
+
+### `GET /json`
+Returns server information in JSON format.
+
+```bash
+curl http://localhost/json
+```
+
+```json
+{
+  "node_name": "my-server",
+  "hostname": "abc123def",
+  "server_ip": "172.17.0.2",
+  "server_port": "80",
+  "client_ip": "172.17.0.1",
+  "client_port": "54321",
+  "scheme": "HTTP",
+  "color": "#f59744",
+  "request_method": "GET",
+  "request_uri": "/json",
+  "request_headers": {
+    "Host": "localhost",
+    "User-Agent": "curl/8.0.0"
+  }
+}
+```
+
+### `GET /text`
+Returns server information in plain text format with ASCII art banner.
+
+```bash
+curl http://localhost/text
+```
+
+### `GET /ping`
+Lightweight health check endpoint for latency measurements.
+
+```bash
+curl http://localhost/ping
+```
+
+```json
+{
+  "pong": true,
+  "timestamp": 1701705600000,
+  "node_name": "my-server",
+  "hostname": "abc123def"
+}
+```
+
+## SSL/TLS Certificates
+
+The container automatically generates self-signed certificates on first startup:
+
+- RSA certificate at `/etc/nginx/ssl/cert.pem` and `/etc/nginx/ssl/key.pem`
+- ECDSA certificate at `/etc/nginx/ssl/eccert.pem` and `/etc/nginx/ssl/eckey.pem`
+- DH parameters at `/etc/nginx/ssl/dhparam.pem`
+
+To use custom certificates, mount them to the container:
+
+```yaml
+volumes:
+  - ./my-cert.pem:/etc/nginx/ssl/cert.pem:ro
+  - ./my-key.pem:/etc/nginx/ssl/key.pem:ro
+```
+
+## Building from Source
+
+```bash
+# Build the image
+docker build -t f5-demo-httpd .
+
+# Run locally
+docker run -d -p 80:80 -p 443:443 f5-demo-httpd
+```
+
+## Use Cases
+
+- **Load Balancer Testing** - Visually verify traffic distribution with unique colors per backend
+- **Reverse Proxy Configuration** - Inspect headers added/modified by upstream proxies
+- **HTTP/2 Testing** - Verify HTTP/2 connectivity and protocol negotiation
+- **Health Check Validation** - Use `/ping` endpoint for health monitoring
+- **Demo Environments** - Showcase multi-tier application architectures
+
+## Color Palettes
+
+### HTTP Colors (vibrant)
+- `#f59744` (orange)
+- `#c465ff` (purple)
+- `#ce5004` (red-orange)
+- `#f3dd6d` (yellow)
+- `#8568c9` (violet)
+- `#ff4caf` (pink)
+
+### HTTPS Colors (soft pastels)
+- `#dccbc7` (soft neutral)
+- `#d0d7db` (light blue-gray)
+- `#f4f4f4` (pale neutral)
+- `#88ccc5` (aqua pastel)
+- `#92c1e9` (light blue)
+- `#addc91` (light green)
+
+## Easter Egg 🎮
+
+See if you can find it.
+
+## License
+
+See [LICENSE.md](LICENSE.md) for license information.
