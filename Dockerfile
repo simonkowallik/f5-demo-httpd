@@ -1,9 +1,21 @@
-FROM httpd:2.4-alpine
-COPY httpd.conf /usr/local/apache2/conf/httpd.conf
-COPY httpd-ssl.conf /usr/local/apache2/conf/extra/httpd-ssl.conf
-COPY server.crt /usr/local/apache2/conf/server.crt
-COPY server.key /usr/local/apache2/conf/server.key
-COPY httpd-foreground /usr/local/bin/httpd-foreground
-COPY htdocs /usr/local/apache2/htdocs
-EXPOSE 80
+FROM nginx:alpine
+
+RUN apk add --no-cache bash openssl curl
+RUN mkdir -p /etc/nginx/ssl
+RUN rm -f /etc/nginx/conf.d/*.conf
+
+COPY conf.d/f5demo.nginx.conf.template /etc/nginx/conf.d/
+COPY conf.d/f5demo.js /etc/nginx/conf.d/
+COPY nginx.conf /etc/nginx/nginx.conf
+
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ADD html /usr/share/nginx/html
+
 EXPOSE 443
+EXPOSE 80
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["nginx", "-g", "daemon off;"]

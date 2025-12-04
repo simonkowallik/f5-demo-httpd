@@ -1,77 +1,85 @@
-function kvHeaders(headers, parent) {
-    var kvpairs = "";
+function getServerInfo(r) {
+    // Determine scheme - check for HTTP/2 first
+    var f5demo_scheme = r.variables.f5demo_scheme || 'UNKNOWN';
+    if (r.variables.http2) {
+        f5demo_scheme = 'HTTP2';
+    }
+
+    return {
+        node_name: r.variables.f5demo_nodename || '',
+        hostname: r.variables.hostname || '',
+        server_ip: r.variables.server_addr || '',
+        server_port: r.variables.server_port || '',
+        client_ip: r.remoteAddress || '',
+        client_port: r.variables.remote_port || '',
+        scheme: f5demo_scheme,
+        color: r.variables.f5demo_color || '',
+        request_method: r.variables.request_method || '',
+        request_uri: r.variables.request_uri || '',
+        request_headers: getHeadersDict(r.headersIn)
+    };
+}
+
+function getHeadersDict(headers) {
+    var result = {};
     for (var h in headers) {
-        kvpairs += " " + parent + "." + h + "=";
-        if ( headers[h].indexOf(" ") == -1 ) {
-        kvpairs += headers[h];
-        } else {
-            kvpairs += "'" + headers[h] + "'";
-        }
+        result[h] = headers[h];
     }
-    return kvpairs;
+    return result;
 }
 
-function kvHeadersDict(headers) {
-    var kvpairs = {};
-    for (var h in headers) {
-	kvpairs[h] = headers[h];
-    }
-    return kvpairs;
-}
-function kvHeadersTxt(r) {
-   var kvpairs = "";
-    for (var h in r.headersIn) {
-	kvpairs += h + "=" + r.headersIn[h] + "\n";
-    }
-    return kvpairs;
+function f5demo_json(r) {
+    r.headersOut['Content-Type'] = 'application/json';
+    r.return(200, JSON.stringify(getServerInfo(r), null, 2) + '\n');
 }
 
+function f5demo_text(r) {
+    var info = getServerInfo(r);
+    var output = `================================================
+ ___ ___   ___                    _
+| __| __| |   \\ ___ _ __  ___    /_\\  _ __ _ __
+| _||__ \\ | |) / -_) '  \\/ _ \\  / _ \\| '_ \\ '_ \\
+|_| |___/ |___/\\___|_|_|_\\___/ /_/ \\_\\ .__/ .__/
+                                      |_|  |_|
+================================================
 
-function headers_json(r) {
-    r.headersOut['Content-Type'] = 'applicaion/json';    
-    r.return(200, JSON.stringify(kvHeadersDict(r.headersIn)) + '\n');
-}
-function f5demo_txt(r) {
-    var output = "================================================\n\
- ___ ___   ___                    _\n\
-| __| __| |   \\ ___ _ __  ___    /_\\  _ __ _ __\n\
-| _||__ \\ | |) / -_) '  \\/ _ \\  / _ \\| '_ \\ '_ \\ \n\
-|_| |___/ |___/\\___|_|_|_\\___/ /_/ \\_\\ .__/ .__/\n\
-                                      |_|  |_|\n================================================";
-    var upper_scheme = r.variables.scheme.toUpperCase();
-    if( r.variables.http2 ) {
-      upper_scheme = 'HTTP2';
+      Node Name: ${info.node_name}
+       Hostname: ${info.hostname}
+          Color: ${info.color}
+
+      Server IP: ${info.server_ip}
+    Server Port: ${info.server_port}
+
+      Client IP: ${info.client_ip}
+    Client Port: ${info.client_port}
+
+         Scheme: ${info.scheme}
+ Request Method: ${info.request_method}
+    Request URI: ${info.request_uri}
+
+Request Headers:
+`;
+    for (var h in info.request_headers) {
+        output += h.padStart(15) + ': ' + info.request_headers[h] + '\n';
     }
-    output += `
 
-      Node Name: ${r.variables.f5demo_nodename}
-     Short Name: ${r.variables.hostname}
-
-      Server IP: ${r.variables.server_addr}
-    Server Port: ${r.variables.server_port}
-
-      Client IP: ${r.remoteAddress}
-    Client Port: ${r.variables.remote_port}
-
-Client Protocol: ${upper_scheme}
- Request Method: ${r.variables.request_method}
-    Request URI: ${r.variables.request_uri}
-
-    host_header: ${r.variables.host}
-     user-agent: ${r.variables.http_user_agent}\n`;
-  if ( r.variables.http_X_Forwarded_for ) {
-     output += 'x-forwarded-for: ' + r.variables.http_X_Forwarded_for + '\n';
- }
-  if (r.variables.query_string === "printenv") {
-    output += "\n client headers:\n\n";
-    for (var h in r.headersIn) {
-	output += h.padStart(15) + ": " + r.headersIn[h] + "\n";
-    }
-  }
-
-
-    r.headersOut['Content-Type'] = 'text/plain';    
+    r.headersOut['Content-Type'] = 'text/plain';
     r.return(200, output);
 }
 
-export default { headers_json, f5demo_txt };
+
+
+function f5demo_ping(r) {
+    r.headersOut['Content-Type'] = 'application/json';
+    r.headersOut['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+    r.return(200, JSON.stringify({
+        pong: true,
+        timestamp: Date.now(),
+        node_name: r.variables.f5demo_nodename || '',
+        hostname: r.variables.hostname || ''
+    }) + '\n');
+}
+
+
+
+export default { f5demo_json, f5demo_text, f5demo_ping };

@@ -1,0 +1,53 @@
+    map $scheme $f5demo_scheme {
+      http 'HTTP';
+      https 'HTTPS';
+      default 'UNKNOWN';
+    }
+
+    map $scheme $f5demo_nodename {
+      default '${F5DEMO_NODENAME}';
+    }
+
+    map $scheme $f5demo_color {
+      http '${F5DEMO_COLOR}';
+      https '${F5DEMO_COLOR_SSL}';
+      default 'UNKNOWN';
+    }
+
+
+js_import conf.d/f5demo.js;
+
+
+server {
+    listen 80 default_server;
+    listen 443 ssl default_server;
+    http2 on;
+    server_name _;
+
+		ssl_certificate /etc/nginx/ssl/eccert.pem;
+		ssl_certificate_key /etc/nginx/ssl/eckey.pem;
+		ssl_certificate /etc/nginx/ssl/cert.pem;
+		ssl_certificate_key /etc/nginx/ssl/key.pem;
+		ssl_trusted_certificate /etc/nginx/ssl/chain.pem;
+
+    include mime.types;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+	location /index.html {
+	    sub_filter_once off;
+	    #sub_filter_types text/html;
+	    sub_filter '<!--F5DEMO_COLOR-->' $f5demo_color;
+	}
+
+	location /json {
+	    js_content f5demo.f5demo_json;
+	}
+	location /text {
+	    js_content f5demo.f5demo_text;
+	}
+	location /ping {
+	    js_content f5demo.f5demo_ping;
+	}
+}

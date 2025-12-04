@@ -1,6 +1,0 @@
-.f5header {
-    background: #eee;
-}
-.f5header span::after {
-    content: "Node 1";
-}

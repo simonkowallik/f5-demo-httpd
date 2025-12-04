@@ -1,0 +1,768 @@
+<!-- -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F5 Demo App</title>
+    <style>
+        :root {
+            --primary-color: #E21D38;
+            --bg-color: #<!--F5DEMO_COLOR-->;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: background 0.5s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #c41230 100%);
+            padding: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .subtitle {
+            color: rgba(255,255,255,0.85);
+            font-size: 13px;
+            margin-top: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .info-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .info-section h3 {
+            color: var(--primary-color);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-section h3::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: var(--text-dark);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            background: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .color-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: white;
+        }
+
+        .color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .headers-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .headers-section h3 {
+            color: var(--primary-color);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .headers-section h3::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .headers-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .header-item {
+            display: flex;
+            padding: 6px 0;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 12px;
+        }
+
+        .header-item:last-child {
+            border-bottom: none;
+        }
+
+        .header-name {
+            color: var(--primary-color);
+            font-weight: 600;
+            min-width: 180px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+        }
+
+        .header-value {
+            color: var(--text-dark);
+            word-break: break-all;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+            color: var(--text-light);
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e9ecef;
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #fff5f5;
+            color: #c0392b;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(226, 29, 56, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 24px rgba(226, 29, 56, 0.5);
+        }
+
+        .refresh-btn svg {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.5s ease;
+        }
+
+        .refresh-btn:hover svg {
+            transform: rotate(180deg);
+        }
+
+        .scheme-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scheme-http { background: #fff3cd; color: #856404; }
+        .scheme-https { background: #d4edda; color: #155724; }
+        .scheme-http2 { background: #cce5ff; color: #004085; }
+
+        .endpoint-buttons {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .endpoint-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .endpoint-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .endpoint-btn svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .latency-indicator {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            z-index: 10;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .latency-indicator:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .latency-indicator .ping-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: ping-pulse 1s ease-in-out infinite;
+        }
+
+        .latency-indicator.inactive .ping-dot {
+            background: #9ca3af;
+            animation: none;
+        }
+
+        .latency-indicator.error .ping-dot {
+            background: #f87171;
+            animation: none;
+        }
+
+        @keyframes ping-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.8); }
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 16px;
+            }
+            .header {
+                padding: 20px 16px;
+            }
+            .info-value {
+                max-width: 120px;
+                font-size: 11px;
+            }
+            .header-name {
+                min-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Server-injected color value -->
+    <div id="server-color" data-color="#<!--F5DEMO_COLOR-->" style="display:none;"></div>
+    
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div class="latency-indicator inactive" id="latency-indicator" onclick="togglePing()" title="Click to start ping monitoring">
+                    <span class="ping-dot"></span>
+                    <span id="latency-value">--</span> ms
+                </div>
+                <div class="endpoint-buttons">
+                    <a href="/json" class="endpoint-btn" title="curl /json">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                        /json
+                    </a>
+                    <a href="/text" class="endpoint-btn" title="curl /text">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        /text
+                    </a>
+                    <a href="/ping" class="endpoint-btn" title="curl /ping">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        /ping
+                    </a>
+                </div>
+                <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><g data-name="Layer 2"><g data-name="Layer 1"><path fill="#e4002b" d="M940.37 894.53a30.85 30.85 0 019.47 22.94 32.43 32.43 0 01-55.4 23.08 32 32 0 01-9.44-23.08 32.54 32.54 0 0132.37-32.57 30.88 30.88 0 0123 9.63m3.81-3.75a36.65 36.65 0 00-26.8-11 37.72 37.72 0 1026.8 64.32 37.71 37.71 0 000-53.36zM923 915.65a18.8 18.8 0 01-6.93.92h-6.54v-15h6.23c4 0 7 .57 8.77 1.58s2.76 3.07 2.76 6a6.38 6.38 0 01-4.29 6.5m-20.75 22.29h7.28v-16.28h5.77c3.82 0 6.56.4 8.11 1.36 2.57 1.54 3.88 4.72 3.88 9.48v3.33l.14 1.25a3 3 0 01.11.5c0 .2.06.27.19.36h6.76l-.24-.48a4.4 4.4 0 01-.35-2.11c-.09-1.14-.09-2.15-.09-3.07v-3.07a11.5 11.5 0 00-2.26-6.43c-1.54-2.21-3.95-3.51-7.19-4.08a17 17 0 006-2c2.77-1.75 4.06-4.56 4.06-8.2 0-5.18-2.06-8.73-6.4-10.49-2.39-1-6.14-1.49-11.3-1.49h-14.47z"/><path fill="#fff" d="M958.59 620.31c2.68-53.34-7.17-110.8-53.58-162.79-47.7-51.41-128.17-95-293.72-105.22 8.6-26.83 16.12-51.41 24.06-76.52 99 3.48 187.06 10.61 262 20.34 5.92-26.85 9.13-53.1 15.26-78.43Q901.2 201 888.43 185.25c-35.65-4.12-71.2-13-109.46-17.9-51.73-6.68-105.88-11.45-164.38-14.15C577.75 262.93 531.7 401 484.46 543.7 730.72 565 825.42 631.37 820.1 725c-4.91 50.57-51.14 96.55-111.93 102-72.31 4.86-105.41-24.35-127.14-56.4-19.14-28.78-38.23-57.62-58.61-89-5.54-9.23-12.85-3.23-19.44 3.21a9738 9738 0 01-43.84 42.28c-9.48 8.24-7.37 15.32-4 22.23 13.77 32.46 26.59 62.22 39.54 91.76 21.56 13.21 122.9 31.25 198.69 25.58 51.36-4.32 115.57-24.18 168.65-64.16 52.43-40.71 90.65-95.5 96.57-182.19"/><path fill="#fff" d="M97.31 796.3q14.22 19.29 30.2 37.13c85.19 15.32 191.42 25.91 302.05 29.13-.37-11.48-.7-22.63-1-34.46-67.94-3.83-99.17-14.19-104.6-27.63-4.53-10.68-5.32-26.63-6.29-42.38-5.1-104.35-6.77-217.22-5-330.51 38-.66 75.83-1 115.53-1.43 19.24-8.77 37.34-17.44 56.54-26 0-13.72.09-26 .09-39.39-58.83.24-114.65 1.24-170.6 2.79 1.58-47.62 3.45-91.58 6.24-134.46 2-28.18 21.51-48.78 41.64-50.39 32.26-1.26 61.23 11.56 89.27 24 15.46 7.49 30.7 14.94 46.54 23.05 7.56 2 16.54 3.78 21.95-2.79 9.39-11.12 18.31-21.45 27.55-32.26 5-7.39 2.84-11.63.79-14.35-20.12-15.89-39.05-30.18-58.21-44.54-11.83-8-30.51-9.76-48.92-9.76-7.34 0-14.71.27-21.55.49-18.92 1-43 4-82.43 13.62-88.81 23.92-195.43 85.84-206.7 187.11-1.45 16.53-2.66 32.9-3.73 49.81-25.08 2.11-47.91 3.92-69.46 6-1.58 19.36-2.64 38-3.52 57.59 21.82-1.28 44.58-2.42 69.94-3.52-3.76 106.16-.2 212.1 9.77 310.22 1.67 14.91 3.3 29.69 1.36 39.24-1.59 9.12-16.27 13.85-37.45 13.69"/><path fill="#e4002b" d="M912.66 217.69c-6.13 25.33-9.34 51.58-15.26 78.43-75-9.73-163.08-16.86-262-20.34-7.94 25.11-15.46 49.69-24.06 76.52 165.55 10.18 246 53.81 293.72 105.22 46.41 52 56.26 109.45 53.58 162.79-5.97 86.69-44.19 141.48-96.64 182.1-53.08 40-117.29 59.84-168.65 64.16-75.79 5.67-177.13-12.37-198.69-25.57-13-29.54-25.77-59.3-39.54-91.76-3.35-6.91-5.46-14 4-22.23a9738 9738 0 0043.84-42.28c6.59-6.44 13.9-12.44 19.44-3.21 20.38 31.43 39.48 60.27 58.61 89 21.73 32.05 54.83 61.26 127.14 56.4 60.79-5.44 107-51.42 111.93-102 5.32-93.6-89.38-160-335.64-181.27C531.7 401 577.75 262.93 614.59 153.2c58.5 2.7 112.65 7.47 164.38 14.15 38.26 4.87 73.81 13.78 109.46 17.9C796.77 72.26 656.88 0 500 0 223.87 0 0 223.86 0 500a497.64 497.64 0 0097.31 296.3c21.18.16 35.86-4.57 37.45-13.7 1.94-9.55.31-24.33-1.36-39.24-10-98.12-13.53-204.06-9.77-310.22-25.36 1.1-48.12 2.24-69.94 3.52.88-19.63 1.94-38.23 3.52-57.59 21.55-2.07 44.38-3.88 69.46-6 1.07-16.91 2.28-33.28 3.74-49.81C141.67 222 248.29 160.08 337.1 136.18c39.41-9.6 63.51-12.63 82.43-13.62 6.84-.22 14.21-.49 21.55-.49 18.41 0 37.09 1.72 48.92 9.76 19.16 14.36 38.09 28.65 58.22 44.54 2 2.72 4.2 7-.8 14.35-9.24 10.81-18.16 21.14-27.55 32.26-5.41 6.57-14.39 4.84-21.95 2.79-15.84-8.11-31.08-15.56-46.54-23.05-28-12.46-57-25.28-89.27-24-20.13 1.61-39.62 22.21-41.64 50.39-2.79 42.88-4.66 86.84-6.24 134.46C370.18 362 426 361 484.85 360.74c0 13.39-.09 25.67-.09 39.39-19.2 8.58-37.3 17.25-56.54 26-39.7.46-77.48.77-115.53 1.43-1.76 113.29-.09 226.16 5 330.51 1 15.75 1.76 31.7 6.29 42.38 5.43 13.44 36.66 23.8 104.6 27.63.27 11.83.6 23 1 34.46-110.63-3.22-216.86-13.81-302-29.13C219.07 935.63 352 1000 500 1000c276.15 0 500-223.87 500-500a497.6 497.6 0 00-87.34-282.31"/></g></g></svg>
+                <h1>F5 Demo App</h1>
+                <p class="subtitle" id="node-name">Loading...</p>
+            </div>
+            <div class="content" id="content">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Fetching server information...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="fetchData()" title="Refresh">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+    </button>
+
+    <script>
+        // Get server-injected color
+        const serverColor = document.getElementById('server-color').dataset.color;
+        
+        // Easter egg: rapidly click logo 5 times rapidly to open pong
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+        document.querySelector('.logo').addEventListener('click', function() {
+            logoClickCount++;
+            if (logoClickTimer) clearTimeout(logoClickTimer);
+            
+            if (logoClickCount >= 5) {
+                logoClickCount = 0;
+                window.location.href = '/_.html';
+            } else {
+                logoClickTimer = setTimeout(() => {
+                    logoClickCount = 0;
+                }, 245); // Reset after 245 milliseconds of no clicks
+            }
+        });
+        document.querySelector('.logo').style.cursor = 'pointer';
+        
+        function getSchemeClass(scheme) {
+            const s = scheme.toLowerCase();
+            if (s === 'http2') return 'scheme-http2';
+            if (s === 'https') return 'scheme-https';
+            return 'scheme-http';
+        }
+
+        function setBackgroundColor(color) {
+            if (color && color !== 'UNKNOWN') {
+                document.body.style.background = color;
+            }
+        }
+
+        function renderData(data) {
+            // Use server-injected color, fall back to API color
+            const displayColor = serverColor || data.color;
+            
+            // Set background color based on the color variable
+            setBackgroundColor(displayColor);
+
+            // Update node name in header
+            document.getElementById('node-name').textContent = data.node_name || data.short_name || 'Server Instance';
+
+            // Build headers HTML
+            let headersHtml = '';
+            if (data.request_headers) {
+                for (const [name, value] of Object.entries(data.request_headers)) {
+                    headersHtml += `
+                        <div class="header-item">
+                            <span class="header-name">${escapeHtml(name)}</span>
+                            <span class="header-value">${escapeHtml(value)}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            const content = `
+                <div class="info-grid">
+                    <div class="info-section">
+                        <h3>Server Information</h3>
+                        <div class="info-item">
+                            <span class="info-label">Node Name</span>
+                            <span class="info-value">${escapeHtml(data.node_name || '-')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Hostname</span>
+                            <span class="info-value">${escapeHtml(data.hostname || '-')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Server IP</span>
+                            <span class="info-value">${escapeHtml(data.server_ip || '-')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Server Port</span>
+                            <span class="info-value">${escapeHtml(data.server_port || '-')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Color</span>
+                            <span class="color-badge">
+                                <span class="color-dot" style="background-color: ${escapeHtml(displayColor || '#ccc')}"></span>
+                                <span style="font-family: monospace; font-weight: 600; color: #2d3436;">${escapeHtml(displayColor || '-')}</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Client Information</h3>
+                        <div class="info-item">
+                            <span class="info-label">Client IP</span>
+                            <span class="info-value">${escapeHtml(data.client_ip || '-')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Client Port</span>
+                            <span class="info-value">${escapeHtml(data.client_port || '-')}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Request Details</h3>
+                        <div class="info-item">
+                            <span class="info-label">Protocol</span>
+                            <span class="scheme-badge ${getSchemeClass(data.scheme)}">${escapeHtml(data.scheme || '-')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Method</span>
+                            <span class="info-value">${escapeHtml(data.request_method || '-')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">URI</span>
+                            <span class="info-value" title="${escapeHtml(data.request_uri || '')}">${escapeHtml(data.request_uri || '-')}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="headers-section">
+                    <h3>Request Headers</h3>
+                    <div class="headers-list">
+                        ${headersHtml || '<p style="color: #636e72;">No headers available</p>'}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('content').innerHTML = content;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showError(errorDetails) {
+            const { message, type, url, status, statusText, timestamp } = errorDetails;
+            document.getElementById('content').innerHTML = `
+                <div class="error">
+                    <p><strong>Error:</strong> ${escapeHtml(message)}</p>
+                    <div style="margin-top: 12px; padding: 12px; background: #fee; border-radius: 8px; text-align: left; font-size: 12px; font-family: monospace;">
+                        <div style="margin-bottom: 6px;"><strong>Type:</strong> ${escapeHtml(type)}</div>
+                        ${status ? `<div style="margin-bottom: 6px;"><strong>Status:</strong> ${escapeHtml(String(status))} ${escapeHtml(statusText || '')}</div>` : ''}
+                        <div style="margin-bottom: 6px;"><strong>URL:</strong> ${escapeHtml(url)}</div>
+                        <div style="margin-bottom: 6px;"><strong>Time:</strong> ${escapeHtml(timestamp)}</div>
+                    </div>
+                    <p style="margin-top: 12px; font-size: 14px;">Click the refresh button to try again.</br>Inspect your browser console for more details.</br>Try reloading the page in the browser.</p>
+                </div>
+            `;
+        }
+
+        async function fetchData() {
+            const url = '/json';
+            const timestamp = new Date().toISOString();
+            
+            try {
+                document.getElementById('content').innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Fetching server information...</p>
+                    </div>
+                `;
+
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    console.error('HTTP error:', response.status, response.statusText);
+                    showError({
+                        message: `Server returned an error response`,
+                        type: 'HTTP Error',
+                        url: url,
+                        status: response.status,
+                        statusText: response.statusText,
+                        timestamp: timestamp
+                    });
+                    return;
+                }
+                
+                const data = await response.json();
+                renderData(data);
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+                
+                let errorType = 'Unknown Error';
+                let errorMessage = error.message || 'Failed to load server information';
+                
+                if (error instanceof TypeError) {
+                    // Network errors typically throw TypeError
+                    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                        errorType = 'Network Error';
+                        errorMessage = 'Unable to connect to server. Check your network connection or if the server is running.';
+                    } else if (error.message.includes('CORS')) {
+                        errorType = 'CORS Error';
+                        errorMessage = 'Cross-origin request blocked. The server may not allow requests from this origin.';
+                    } else {
+                        errorType = 'Connection Error';
+                    }
+                } else if (error instanceof SyntaxError) {
+                    errorType = 'Parse Error';
+                    errorMessage = 'Server returned invalid JSON. The response may be malformed or empty.';
+                } else if (error.name === 'AbortError') {
+                    errorType = 'Request Aborted';
+                    errorMessage = 'The request was cancelled or timed out.';
+                }
+                
+                showError({
+                    message: errorMessage,
+                    type: errorType,
+                    url: url,
+                    status: null,
+                    statusText: null,
+                    timestamp: timestamp
+                });
+            }
+        }
+
+        // Initial load
+        fetchData();
+
+        // Auto-refresh every 30 seconds
+        //setInterval(fetchData, 30000);
+
+        // Ping functionality
+        let pingInterval = null;
+        let pingActive = false;
+        let pingCount = 0;
+        
+        async function sendPing() {
+            const startTime = performance.now();
+            const indicator = document.getElementById('latency-indicator');
+            const latencyValue = document.getElementById('latency-value');
+            
+            try {
+                const response = await fetch('/ping', {
+                    cache: 'no-store',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const endTime = performance.now();
+                const latency = Math.round(endTime - startTime);
+                pingCount++;
+                
+                latencyValue.textContent = latency;
+                indicator.classList.remove('error', 'inactive');
+                indicator.title = `Ping #${pingCount}: ${latency}ms - Click to stop`;
+                
+                console.log(`[Ping #${pingCount}] Latency: ${latency}ms | Node: ${data.node_name || data.hostname || 'unknown'} | Timestamp: ${new Date().toISOString()}`);
+            } catch (error) {
+                pingCount++;
+                console.error(`[Ping #${pingCount}] Failed:`, error.message);
+                latencyValue.textContent = 'ERR';
+                indicator.classList.add('error');
+                indicator.classList.remove('inactive');
+                indicator.title = `Ping failed: ${error.message} - Click to stop`;
+            }
+        }
+        
+        function togglePing() {
+            const indicator = document.getElementById('latency-indicator');
+            const latencyValue = document.getElementById('latency-value');
+            
+            if (pingActive) {
+                // Stop pinging
+                clearInterval(pingInterval);
+                pingInterval = null;
+                pingActive = false;
+                pingCount = 0;
+                indicator.classList.add('inactive');
+                indicator.classList.remove('error');
+                latencyValue.textContent = '--';
+                indicator.title = 'Click to start ping monitoring';
+                console.log('[Ping] Stopped');
+            } else {
+                // Start pinging
+                pingActive = true;
+                console.log('[Ping] Started - pinging every 1 second');
+                sendPing();
+                pingInterval = setInterval(sendPing, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
