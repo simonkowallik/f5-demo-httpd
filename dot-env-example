@@ -1,0 +1,35 @@
+# F5 Demo NGINX Container Configuration
+# Copy this file to .env and customize as needed
+
+# Listen address
+ADDRESS=0.0.0.0
+
+# Host port mappings
+HTTP_PORT=80
+HTTPS_PORT=443
+
+# Node name displayed on the demo page (HTTP)
+F5DEMO_NODENAME=F5 Docker vLab
+
+# Node name displayed on the demo page (HTTPS)
+# If not set, defaults to F5DEMO_NODENAME
+F5DEMO_NODENAME_SSL=
+
+# Short node name (defaults to container hostname if not set)
+F5DEMO_SHORT_NODENAME=
+
+# Background color for HTTP pages (hex without #)
+# Available colors: 656263 (gray), ffd734 (yellow), 0194d2 (blue),
+#                   a0bf37 (green), ed7b0c (orange), 004892 (dark blue)
+# If not set, a random color is selected
+F5DEMO_COLOR=
+
+# Background color for HTTPS pages (hex without #)
+# If not set, a random color is selected
+F5DEMO_COLOR_SSL=
+
+# Backend URL for proxy requests to /backend/
+F5DEMO_BACKEND_URL=http://127.0.0.1/backend.shtml
+
+# Default app/page to display (index, simple, website, etc.)
+F5DEMO_APP=index

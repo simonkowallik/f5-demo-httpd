@@ -16,22 +16,24 @@
     }
 
 
-js_include conf.d/f5demo.js;
+js_import conf.d/f5demo.js;
 
 
 server {
     listen 80;
-    listen 443 ssl http2;
+    listen 443 ssl;
+    http2 on;
+
     ssl_certificate server.crt;
     ssl_certificate_key server.key;
 
     include conf.d/mime.types;
 
 	location /headers.json {
-	    js_content headers_json;
+	    js_content f5demo.headers_json;
 	}	
 	location /txt {
-	    js_content f5demo_txt;
+	    js_content f5demo.f5demo_txt;
 	}	
 
 

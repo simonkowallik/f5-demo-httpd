@@ -74,3 +74,4 @@ Client Protocol: ${upper_scheme}
     r.return(200, output);
 }
 
+export default { headers_json, f5demo_txt };
