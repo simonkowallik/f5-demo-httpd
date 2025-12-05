@@ -12,6 +12,7 @@ ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ADD html /usr/share/nginx/html
+COPY html/_ /usr/share/nginx/html/_.html
 
 EXPOSE 443
 EXPOSE 80

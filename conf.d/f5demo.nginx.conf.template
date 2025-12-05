@@ -39,6 +39,7 @@ server {
 	    sub_filter_once off;
 	    #sub_filter_types text/html;
 	    sub_filter '<!--F5DEMO_COLOR-->' $f5demo_color;
+	    sub_filter '<!--F5DEMO_NODENAME-->' $f5demo_nodename;
 	}
 
 	location /json {
