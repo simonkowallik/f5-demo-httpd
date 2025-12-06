@@ -42,20 +42,35 @@ server {
 	    sub_filter '<!--F5DEMO_NODENAME-->' $f5demo_nodename;
 	}
 
+	location /redirect-tests.html {
+	    sub_filter_once off;
+	    sub_filter '<!--F5DEMO_COLOR-->' $f5demo_color;
+	}
+
 	location /json { js_content f5demo.f5demo_json; }
 	location /text { js_content f5demo.f5demo_text; }
 	location /ping { js_content f5demo.f5demo_ping; }
 
-  # use-case: redirect-rewrite matching
-  location /redirect/matching { return 302 http://$host$request_uri/; }
-
-  # use-case: redirect-rewrite all
-  location /redirect/all { return 302 http://$host/redirect/all-new; }
-  location /redirect/host-all { return 302 http://internal.host.name/redirect/all-new; }
+  # test-case: http redirect-rewrite matching
+  location /redirect/matching { return 302 http://$host$request_uri/new; }
+  
+  # test-case: http redirect-rewrite all
+  location /redirect/all { return 302 http://$host/redirect/new-all; }
 
   # successful rewrites end here:
-  location /redirect/matching/ { default_type application/json; return 200 '{"status":"success"}'; }
-  location /redirect/all-new { default_type application/json; return 200 '{"status":"success"}'; }
-  location /redirect/host-all-new { default_type application/json; return 200 '{"status":"success"}'; }
+  location /redirect/matching/new { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+  location /redirect/new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+
+  # advanced test-cases: http redirect-rewrite not sufficient
+  location /redirect/host-matching { return 302 http://internal.host.name$request_uri/new; }
+
+  location /redirect/host-all { return 302 http://internal.host.name/redirect/host-new-all; }
+  location /redirect/hostport-all { return 302 http://internal.host.name:54321/redirect/hostport-new-all; }
+
+  # successful advanced rewrites end here:
+  location /redirect/host-matching/new { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+
+  location /redirect/host-new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+  location /redirect/hostport-new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
 
 }
