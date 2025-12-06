@@ -1,18 +1,18 @@
-    map $scheme $f5demo_scheme {
-      http 'HTTP';
-      https 'HTTPS';
-      default 'UNKNOWN';
-    }
+map $scheme $f5demo_scheme {
+  http 'HTTP';
+  https 'HTTPS';
+  default 'UNKNOWN';
+}
 
-    map $scheme $f5demo_nodename {
-      default '${F5DEMO_NODENAME}';
-    }
+map $scheme $f5demo_nodename {
+  default '${F5DEMO_NODENAME}';
+}
 
-    map $scheme $f5demo_color {
-      http '${F5DEMO_COLOR}';
-      https '${F5DEMO_COLOR_SSL}';
-      default 'UNKNOWN';
-    }
+map $scheme $f5demo_color {
+  http '${F5DEMO_COLOR}';
+  https '${F5DEMO_COLOR_SSL}';
+  default 'UNKNOWN';
+}
 
 
 js_import conf.d/f5demo.js;
@@ -42,13 +42,20 @@ server {
 	    sub_filter '<!--F5DEMO_NODENAME-->' $f5demo_nodename;
 	}
 
-	location /json {
-	    js_content f5demo.f5demo_json;
-	}
-	location /text {
-	    js_content f5demo.f5demo_text;
-	}
-	location /ping {
-	    js_content f5demo.f5demo_ping;
-	}
+	location /json { js_content f5demo.f5demo_json; }
+	location /text { js_content f5demo.f5demo_text; }
+	location /ping { js_content f5demo.f5demo_ping; }
+
+  # use-case: redirect-rewrite matching
+  location /redirect/matching { return 302 http://$host$request_uri/; }
+
+  # use-case: redirect-rewrite all
+  location /redirect/all { return 302 http://$host/redirect/all-new; }
+  location /redirect/host-all { return 302 http://internal.host.name/redirect/all-new; }
+
+  # successful rewrites end here:
+  location /redirect/matching/ { default_type application/json; return 200 '{"status":"success"}'; }
+  location /redirect/all-new { default_type application/json; return 200 '{"status":"success"}'; }
+  location /redirect/host-all-new { default_type application/json; return 200 '{"status":"success"}'; }
+
 }
