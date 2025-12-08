@@ -4,11 +4,17 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: f5-demo-nginx
+    # using docker-proxy to map ports into the container
     ports:
-      - "${ADDRESS:-0.0.0.0}:${HTTP_PORT:-80}:80"
-      - "${ADDRESS:-0.0.0.0}:${HTTPS_PORT:-443}:443"
-#    environment:
+      - "${F5DEMO_LISTEN_ADDR:-0.0.0.0}:${HTTP_PORT:-80}:80"
+      - "${F5DEMO_LISTEN_ADDR_SSL:-0.0.0.0}:${HTTPS_PORT:-443}:443"
+    #environment:
       #- F5DEMO_NODENAME=pool-member-one
       #- F5DEMO_COLOR=a0bf37
       #- F5DEMO_COLOR_SSL=37a0bf
+      # with network_mode: host these allow fine control of the listen address,
+      # eg. when running multiple container instances with different config on the same host but different IP addresses
+      #- F5DEMO_LISTEN_ADDR=10.1.10.11
+      #- F5DEMO_LISTEN_ADDR_SSL=10.1.10.11
+    #network_mode: host
     restart: unless-stopped

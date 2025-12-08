@@ -4,15 +4,15 @@ RUN apk add --no-cache bash openssl curl
 RUN mkdir -p /etc/nginx/ssl
 RUN rm -f /etc/nginx/conf.d/*.conf
 
-COPY conf.d/f5demo.nginx.conf.template /etc/nginx/conf.d/
-COPY conf.d/f5demo.js /etc/nginx/conf.d/
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY files/conf.d/f5demo.nginx.conf.template /etc/nginx/conf.d/
+COPY files/conf.d/f5demo.js /etc/nginx/conf.d/
+COPY files/nginx.conf /etc/nginx/nginx.conf
 
-ADD entrypoint.sh /entrypoint.sh
+ADD files/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-ADD html /usr/share/nginx/html
-COPY html/_ /usr/share/nginx/html/_.html
+ADD files/html /usr/share/nginx/html
+COPY files/html/_ /usr/share/nginx/html/_.html
 
 EXPOSE 443
 EXPOSE 80

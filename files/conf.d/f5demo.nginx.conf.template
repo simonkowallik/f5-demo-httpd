@@ -19,8 +19,8 @@ js_import conf.d/f5demo.js;
 
 
 server {
-    listen 80 default_server;
-    listen 443 ssl default_server;
+    listen ${F5DEMO_LISTEN_ADDR}:80 default_server;
+    listen ${F5DEMO_LISTEN_ADDR}:443 ssl default_server;
     http2 on;
     server_name _;
 
@@ -51,17 +51,18 @@ server {
 	location /text { js_content f5demo.f5demo_text; }
 	location /ping { js_content f5demo.f5demo_ping; }
 
-  # test-case: http redirect-rewrite matching
+  # test-case: ltm profile http <profilename> redirect-rewrite matching
   location /redirect/matching { return 302 http://$host$request_uri/new; }
   
-  # test-case: http redirect-rewrite all
+  # test-case: ltm profile http <profilename> redirect-rewrite all
   location /redirect/all { return 302 http://$host/redirect/new-all; }
 
   # successful rewrites end here:
   location /redirect/matching/new { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
   location /redirect/new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
 
-  # advanced test-cases: http redirect-rewrite not sufficient
+  # advanced test-cases: ltm profile http <profilename> redirect-rewrite not sufficient
+  # create ltm profile rewrite new uri-rules replace-all-with { rule1 { client { host external.host.example.com path / scheme https } server { path / } type response } }
   location /redirect/host-matching { return 302 http://internal.host.name$request_uri/new; }
 
   location /redirect/host-all { return 302 http://internal.host.name/redirect/host-new-all; }
