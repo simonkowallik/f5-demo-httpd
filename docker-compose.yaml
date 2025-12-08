@@ -12,6 +12,8 @@ services:
       #- F5DEMO_NODENAME=pool-member-one
       #- F5DEMO_COLOR=a0bf37
       #- F5DEMO_COLOR_SSL=37a0bf
+      #- F5DEMO_LISTEN_PORT=8080
+      #- F5DEMO_LISTEN_PORT_SSL=8443
       # with network_mode: host these allow fine control of the listen address,
       # eg. when running multiple container instances with different config on the same host but different IP addresses
       #- F5DEMO_LISTEN_ADDR=10.1.10.11

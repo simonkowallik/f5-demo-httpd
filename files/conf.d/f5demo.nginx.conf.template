@@ -19,8 +19,8 @@ js_import conf.d/f5demo.js;
 
 
 server {
-    listen ${F5DEMO_LISTEN_ADDR}:80 default_server;
-    listen ${F5DEMO_LISTEN_ADDR}:443 ssl default_server;
+    listen ${F5DEMO_LISTEN_ADDR}:${F5DEMO_LISTEN_PORT} default_server;
+    listen ${F5DEMO_LISTEN_ADDR_SSL}:${F5DEMO_LISTEN_PORT_SSL} ssl default_server;
     http2 on;
     server_name _;
 
