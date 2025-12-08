@@ -35,43 +35,45 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
-	location /index.html {
-	    sub_filter_once off;
-	    #sub_filter_types text/html;
-	    sub_filter '<!--F5DEMO_COLOR-->' $f5demo_color;
-	    sub_filter '<!--F5DEMO_NODENAME-->' $f5demo_nodename;
-	}
+    add_header X-Powered-By "https://github.com/simonkowallik/f5-demo-httpd" always;
 
-	location /redirect-tests.html {
-	    sub_filter_once off;
-	    sub_filter '<!--F5DEMO_COLOR-->' $f5demo_color;
-	}
+    location /index.html {
+        sub_filter_once off;
+        #sub_filter_types text/html;
+        sub_filter '<!--F5DEMO_COLOR-->' $f5demo_color;
+        sub_filter '<!--F5DEMO_NODENAME-->' $f5demo_nodename;
+    }
 
-	location /json { js_content f5demo.f5demo_json; }
-	location /text { js_content f5demo.f5demo_text; }
-	location /ping { js_content f5demo.f5demo_ping; }
+    location /redirect-tests.html {
+        sub_filter_once off;
+        sub_filter '<!--F5DEMO_COLOR-->' $f5demo_color;
+    }
 
-  # test-case: ltm profile http <profilename> redirect-rewrite matching
-  location /redirect/matching { return 302 http://$host$request_uri/new; }
-  
-  # test-case: ltm profile http <profilename> redirect-rewrite all
-  location /redirect/all { return 302 http://$host/redirect/new-all; }
+    location /json { js_content f5demo.f5demo_json; }
+    location /text { js_content f5demo.f5demo_text; }
+    location /ping { js_content f5demo.f5demo_ping; }
 
-  # successful rewrites end here:
-  location /redirect/matching/new { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
-  location /redirect/new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+    # test-case: ltm profile http <profilename> redirect-rewrite matching
+    location /redirect/matching { return 302 http://$host$request_uri/new; }
+    
+    # test-case: ltm profile http <profilename> redirect-rewrite all
+    location /redirect/all { return 302 http://$host/redirect/new-all; }
 
-  # advanced test-cases: ltm profile http <profilename> redirect-rewrite not sufficient
-  # create ltm profile rewrite new uri-rules replace-all-with { rule1 { client { host external.host.example.com path / scheme https } server { path / } type response } }
-  location /redirect/host-matching { return 302 http://internal.host.name$request_uri/new; }
+    # successful rewrites end here:
+    location /redirect/matching/new { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+    location /redirect/new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
 
-  location /redirect/host-all { return 302 http://internal.host.name/redirect/host-new-all; }
-  location /redirect/hostport-all { return 302 http://internal.host.name:54321/redirect/hostport-new-all; }
+    # advanced test-cases: ltm profile http <profilename> redirect-rewrite not sufficient
+    # create ltm profile rewrite new uri-rules replace-all-with { rule1 { client { host external.host.example.com path / scheme https } server { path / } type response } }
+    location /redirect/host-matching { return 302 http://internal.host.name$request_uri/new; }
 
-  # successful advanced rewrites end here:
-  location /redirect/host-matching/new { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+    location /redirect/host-all { return 302 http://internal.host.name/redirect/host-new-all; }
+    location /redirect/hostport-all { return 302 http://internal.host.name:54321/redirect/hostport-new-all; }
 
-  location /redirect/host-new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
-  location /redirect/hostport-new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+    # successful advanced rewrites end here:
+    location /redirect/host-matching/new { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+
+    location /redirect/host-new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
+    location /redirect/hostport-new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
 
 }
