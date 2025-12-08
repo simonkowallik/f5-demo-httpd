@@ -571,11 +571,11 @@
                         </div>
                         <div class="info-item">
                             <span class="info-label">Server IP</span>
-                            <span class="info-value">${escapeHtml(data.server_ip || '-')}</span>
+                            <span class="info-value" title="${escapeHtml(data.server_ip || '')}">${escapeHtml(data.server_ip || '-')}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Server Port</span>
-                            <span class="info-value">${escapeHtml(data.server_port || '-')}</span>
+                            <span class="info-value" title="${escapeHtml(data.server_port || '')}">${escapeHtml(data.server_port || '-')}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Color</span>
@@ -590,11 +590,11 @@
                         <h3>Client Information</h3>
                         <div class="info-item">
                             <span class="info-label">Client IP</span>
-                            <span class="info-value">${escapeHtml(data.client_ip || '-')}</span>
+                            <span class="info-value" title="${escapeHtml(data.client_ip || '')}">${escapeHtml(data.client_ip || '-')}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Client Port</span>
-                            <span class="info-value">${escapeHtml(data.client_port || '-')}</span>
+                            <span class="info-value" title="${escapeHtml(data.client_port || '')}">${escapeHtml(data.client_port || '-')}</span>
                         </div>
                     </div>
 
@@ -605,8 +605,16 @@
                             <span class="scheme-badge ${getSchemeClass(data.scheme)}">${escapeHtml(data.scheme || '-')}</span>
                         </div>
                         <div class="info-item">
+                            <span class="info-label">SSL Protocol</span>
+                            <span class="info-value" title="${escapeHtml(data.ssl_protocol || '')}">${escapeHtml(data.ssl_protocol || '-')}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">SSL Cipher</span>
+                            <span class="info-value" title="${escapeHtml(data.ssl_cipher || '')}">${escapeHtml(data.ssl_cipher || '-')}</span>
+                        </div>
+                        <div class="info-item">
                             <span class="info-label">Method</span>
-                            <span class="info-value">${escapeHtml(data.request_method || '-')}</span>
+                            <span class="info-value" title="${escapeHtml(data.request_method || '')}">${escapeHtml(data.request_method || '-')}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">URI</span>

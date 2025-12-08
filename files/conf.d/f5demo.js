@@ -13,6 +13,8 @@ function getServerInfo(r) {
         client_ip: r.remoteAddress || '',
         client_port: r.variables.remote_port || '',
         scheme: f5demo_scheme,
+        ssl_cipher: r.variables.ssl_cipher || '',
+        ssl_protocol: r.variables.ssl_protocol || '',
         color: r.variables.f5demo_color || '',
         request_method: r.variables.request_method || '',
         request_uri: r.variables.request_uri || '',
@@ -52,6 +54,9 @@ function f5demo_text(r) {
 
       Client IP: ${info.client_ip}
     Client Port: ${info.client_port}
+
+     SSL Cipher: ${info.ssl_cipher}
+   SSL Protocol: ${info.ssl_protocol}
 
          Scheme: ${info.scheme}
  Request Method: ${info.request_method}
