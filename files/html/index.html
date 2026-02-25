@@ -335,7 +335,11 @@
             top: 12px;
             right: 12px;
             display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: flex-end;
             gap: 8px;
+            max-width: 280px;
             z-index: 10;
         }
 
@@ -452,6 +456,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                         </svg>
                         Tests
+                    </a>
+                    <a href="/errors.html" class="endpoint-btn" title="Error Pages">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                        </svg>
+                        Errors
                     </a>
                     <a href="/json" class="endpoint-btn" title="curl /json">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>XML Web Service Error</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:24px;color:#111}
+    h1{color:#b00;margin:0 0 10px}
+    .box{border:1px solid #ddd;border-radius:6px;padding:14px;background:#fafafa}
+    pre{font-family:Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+    .hint{color:#666;font-size:0.95em}
+    .label{color:#444}
+  </style>
+</head>
+<body>
+  <h1>400 Bad Request — XML parsing failed</h1>
+  <div class="box">
+    <p><span class="label">Service:</span> OrderValidationService</p>
+    <p><span class="label">Error:</span> Malformed XML (invalid token) at line 7, column 19</p>
+    <p class="hint">(Demo page: shows an XML trace-like diagnostic; real services should return a machine-readable fault.)</p>
+  </div>
+
+  <h2>Inbound payload (excerpt)</h2>
+  <div class="box">
+<pre>&lt;Order&gt;
+  &lt;Id&gt;1042&lt;/Id&gt;
+  &lt;Customer&gt;
+    &lt;Name&gt;Ada Lovelace&lt;/Name&gt;
+  &lt;/Customer&gt;
+  &lt;Items&gt;
+    &lt;Item sku="ABC123" qty="2"&gt;
+    &lt;Item sku="DEF456" qty="1"/&gt;
+  &lt;/Items&gt;
+&lt;/Order&gt;
+
+^^^ line 7: missing closing tag for &lt;Item&gt; caused parser to choke</pre>
+  </div>
+
+  <h2>Parser trace</h2>
+  <div class="box">
+<pre>org.xml.sax.SAXParseException; lineNumber: 7; columnNumber: 19; The element type "Item" must be terminated by the matching end-tag "&lt;/Item&gt;".
+    at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.createSAXParseException(ErrorHandlerWrapper.java:XXX)
+    at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:XXX)
+    at com.sun.org.apache.xerces.internal.impl.XMLScanner.reportFatalError(XMLScanner.java:XXX)
+    at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanEndElement(XMLDocumentFragmentScannerImpl.java:XXX)
+    at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(XMLDocumentFragmentScannerImpl.java:XXX)
+    at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:XXX)
+    at com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.next(XMLNSDocumentScannerImpl.java:XXX)
+    at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:XXX)
+    at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:XXX)
+    at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:XXX)
+    at javax.xml.parsers.SAXParser.parse(SAXParser.java:XXX)
+    at com.example.xml.XmlPayloadParser.parse(XmlPayloadParser.java:54)
+    at com.example.service.OrderValidationService.validate(OrderValidationService.java:39)</pre>
+  </div>
+
+  <h2>Suggested client fix</h2>
+  <div class="box">
+<pre>Ensure every &lt;Item&gt; start-tag has a corresponding &lt;/Item&gt; end-tag,
+and validate your payload against the service XSD before sending.</pre>
+  </div>
+</body>
+</html>

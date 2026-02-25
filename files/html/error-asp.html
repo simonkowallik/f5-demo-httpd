@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Server Error in '/' Application</title>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;margin:24px;color:#111}
+    h1{color:#a00;margin:0 0 10px}
+    h2{margin:18px 0 6px}
+    .box{border:1px solid #ddd;border-radius:6px;padding:14px;background:#fafafa}
+    code,pre{font-family:Consolas,Menlo,monospace}
+    pre{white-space:pre-wrap;word-break:break-word}
+    .meta{color:#444}
+    .hint{color:#666;font-size:0.95em}
+  </style>
+</head>
+<body>
+  <h1>Server Error in '/' Application.</h1>
+  <div class="box">
+    <div class="meta"><strong>Runtime Error</strong></div>
+    <p>Description: An unhandled exception occurred during the execution of the current web request.</p>
+    <p>Exception Details: <strong>System.NullReferenceException</strong>: Object reference not set to an instance of an object.</p>
+    <p class="hint">(Demo page: this stack trace is synthetic—do not show traces like this in production.)</p>
+  </div>
+
+  <h2>Source Error</h2>
+  <div class="box">
+<pre><code>Line 42:     var customer = repo.GetCustomer(id);
+Line 43:     var tier = customer.Loyalty.Tier; // &lt;-- NullReferenceException
+Line 44:     return View(tier);</code></pre>
+  </div>
+
+  <h2>Stack Trace</h2>
+  <div class="box">
+<pre><code>[NullReferenceException: Object reference not set to an instance of an object.]
+DemoShop.Web.Controllers.CustomerController.Details(Int32 id) in C:\inetpub\wwwroot\DemoShop\Controllers\CustomerController.cs:line 43
+lambda_method(Closure , Object , Object[] )
+System.Web.Mvc.ActionMethodDispatcher.Execute(ControllerBase controller, Object[] parameters)
+System.Web.Mvc.ReflectedActionDescriptor.Execute(ControllerContext controllerContext, IDictionary`2 parameters)
+System.Web.Mvc.ControllerActionInvoker.InvokeActionMethod(ControllerContext controllerContext, ActionDescriptor actionDescriptor, IDictionary`2 parameters)
+System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+System.Web.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)</code></pre>
+  </div>
+
+  <h2>Version Information</h2>
+  <div class="box">
+    <div class="meta">Microsoft .NET Framework Version: 4.8.XXXX; ASP.NET Version: 4.8.XXXX</div>
+  </div>
+</body>
+</html>

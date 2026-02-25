@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HTTP Status 500 – Internal Server Error</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:24px;color:#111}
+    h1{color:#b00;margin:0 0 10px}
+    .box{border:1px solid #ddd;border-radius:6px;padding:14px;background:#fafafa}
+    pre{font-family:Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+    .kv{color:#333}
+    .hint{color:#666;font-size:0.95em}
+  </style>
+</head>
+<body>
+  <h1>HTTP Status 500 – Internal Server Error</h1>
+  <div class="box">
+    <div class="kv"><strong>Type</strong> Exception Report</div>
+    <div class="kv"><strong>Message</strong> java.lang.IllegalStateException: Cannot call sendError() after the response has been committed</div>
+    <div class="kv"><strong>Description</strong> The server encountered an unexpected condition that prevented it from fulfilling the request.</div>
+    <p class="hint">(Demo page: synthetic Tomcat-style output.)</p>
+  </div>
+
+  <h2>Exception</h2>
+  <div class="box">
+<pre>java.lang.IllegalStateException: Cannot call sendError() after the response has been committed
+    at org.apache.catalina.connector.ResponseFacade.sendError(ResponseFacade.java:XXX)
+    at com.example.web.UserServlet.doGet(UserServlet.java:88)
+    at javax.servlet.http.HttpServlet.service(HttpServlet.java:XXX)
+    at javax.servlet.http.HttpServlet.service(HttpServlet.java:XXX)
+    at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:XXX)
+    at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:XXX)
+    at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:XXX)
+    at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:XXX)
+    at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:XXX)
+    at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:XXX)
+    at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:XXX)
+    at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:XXX)
+    at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:XXX)
+    at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:XXX)
+    at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:XXX)
+    at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:XXX)
+    at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:XXX)
+    at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:XXX)
+    at java.lang.Thread.run(Thread.java:XXX)</pre>
+  </div>
+
+  <h2>Root Cause</h2>
+  <div class="box">
+<pre>com.example.service.UserNotFoundException: User id 1042 not found
+    at com.example.service.UserService.getUser(UserService.java:214)
+    at com.example.web.UserServlet.doGet(UserServlet.java:71)
+    ... 20 more</pre>
+  </div>
+</body>
+</html>

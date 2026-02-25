@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fatal error</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:24px;color:#111}
+    h1{color:#b00;margin:0 0 10px}
+    .box{border:1px solid #ddd;border-radius:6px;padding:14px;background:#fff8f8}
+    pre{font-family:Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+    .hint{color:#666;font-size:0.95em}
+  </style>
+</head>
+<body>
+  <h1>Fatal error</h1>
+  <div class="box">
+    <p><strong>Uncaught TypeError:</strong> Argument 1 passed to App\\Service\\InvoiceService::total() must be of the type array, null given, called in /var/www/html/public/index.php on line 21 and defined in /var/www/html/src/Service/InvoiceService.php:57</p>
+    <p class="hint">(Demo page: synthetic PHP error + trace.)</p>
+  </div>
+
+  <h2>Stack trace</h2>
+  <div class="box">
+<pre>#0 /var/www/html/public/index.php(21): App\Service\InvoiceService-&gt;total(NULL)
+#1 {main}
+  thrown in /var/www/html/src/Service/InvoiceService.php on line 57</pre>
+  </div>
+
+  <h2>Request context</h2>
+  <div class="box">
+<pre>GET /invoice/1042 HTTP/1.1
+Host: demo.local
+User-Agent: curl/8.x
+Accept: text/html</pre>
+  </div>
+</body>
+</html>

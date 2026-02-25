@@ -76,4 +76,27 @@ server {
     location /redirect/host-new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
     location /redirect/hostport-new-all { default_type application/json; return 200 '{"status":"success","path":"$request_uri"}'; }
 
+    # stack traces / error pages
+    error_page 500 501 503 @serve_error_page;
+
+    location = /error/500/asp { set $error_page_file error-asp.html; return 500; }
+    location = /error/500/jsp { set $error_page_file error-jsp.html; return 500; }
+    location = /error/500/php { set $error_page_file error-php.html; return 500; }
+    location = /error/500/xml { set $error_page_file error-xmlservice.html; return 500; }
+
+    location = /error/501/asp { set $error_page_file error-asp.html; return 501; }
+    location = /error/501/jsp { set $error_page_file error-jsp.html; return 501; }
+    location = /error/501/php { set $error_page_file error-php.html; return 501; }
+    location = /error/501/xml { set $error_page_file error-xmlservice.html; return 501; }
+
+    location = /error/503/asp { set $error_page_file error-asp.html; return 503; }
+    location = /error/503/jsp { set $error_page_file error-jsp.html; return 503; }
+    location = /error/503/php { set $error_page_file error-php.html; return 503; }
+    location = /error/503/xml { set $error_page_file error-xmlservice.html; return 503; }
+
+    location @serve_error_page {
+        default_type text/html;
+        try_files /$error_page_file =404;
+    }
+
 }
